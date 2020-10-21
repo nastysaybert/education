@@ -11,7 +11,7 @@
     </servlet>
     <servlet-mapping>    //здесь прописан путь к куску адресной строки, вызывающей сервлет
         <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/hello</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping><!---->
 
   </web-app>
