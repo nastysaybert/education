@@ -16,7 +16,6 @@ public class Servlet2 extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
-        //resp.addHeader("Content-Type","text/html; charset=UTF-8");
         PrintWriter pw = resp.getWriter();
         String name = req.getParameter("name");
         if (name == null){
@@ -24,7 +23,6 @@ public class Servlet2 extends HttpServlet {
         }
         else{
             req.setAttribute("name",name);
-            //pw.println("Hello, " + req.getParameter("name") + "!");
         }
         getServletContext().getRequestDispatcher("/sayHello.jsp").forward(req, resp);
     }
