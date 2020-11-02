@@ -3,15 +3,15 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <display-name>Education Task3</display-name>
 
-    <servlet>    //здесь прописан путь к Java-классу
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>main.java.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>    //здесь прописан путь к куску адресной строки, вызывающей сервлет
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping><!---->
+  <servlet>    //здесь прописан путь к Java-классу
+    <servlet-name>Servlet1</servlet-name>
+    <servlet-class>main.java.Servlet1</servlet-class>
+  </servlet>
+  <servlet-mapping>    //здесь прописан путь к куску адресной строки, вызывающей сервлет
+    <servlet-name>Servlet1</servlet-name>
+    <url-pattern>/servlet1</url-pattern>
+  </servlet-mapping><!---->
 
-  </web-app>
+</web-app>
