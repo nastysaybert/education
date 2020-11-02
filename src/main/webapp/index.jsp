@@ -11,8 +11,8 @@
                 <label>Имя    <input name="name" type="text" required placeholder="John Doe"></label>
             </fieldset>
             <br>
-            <button type="submit">Servlet1</button>
-            <button type="submit">Servlet2</button>
+            <button formaction="servlet1" type="submit">Servlet1</button>
+            <button formaction="servlet2" type="submit">Servlet2</button>
         </form>
 
     </body>
