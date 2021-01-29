@@ -1,5 +1,6 @@
 package DAO;
 
+import models.Address;
 import models.Visitor;
 
 import java.sql.SQLException;
@@ -11,4 +12,5 @@ public interface VisitorDAO {
     public void update (Visitor visitor);
     public void delete (Visitor visitor);
     public List<Visitor> getAllVisitors ();
+    public List<Address> getAddressesByVisitor (Visitor visitor);
 }

@@ -1,10 +1,12 @@
 package DAO;
 
+import models.Address;
 import models.Visitor;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utils.HibernateSessionFactoryUtil;
 
+import org.hibernate.query.Query;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -47,5 +49,14 @@ public class VisitorDAOImpl implements VisitorDAO {
         //List<Visitor> visitors = (List<Visitor>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From Visitor").list();
         List<Visitor> visitors = (List<Visitor>) HibernateSessionFactoryUtil.getHibernateSession().createQuery("From Visitor").list();
         return visitors;
+    }
+
+    @Override
+    public List<Address> getAddressesByVisitor(Visitor visitor) {
+        List<Address> addresses =  HibernateSessionFactoryUtil.getHibernateSession()
+                .createQuery("From Address address where address.visitorID =:visitorID")
+                .setParameter(0,visitor.getVisitorId())
+                .list();
+        return addresses;
     }
 }

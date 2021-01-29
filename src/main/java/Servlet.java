@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,7 +19,7 @@ public class Servlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
-        PrintWriter pw = resp.getWriter();
+        //PrintWriter pw = resp.getWriter();
 
         Visitor visitorFromForm = new Visitor();
 
@@ -31,10 +32,9 @@ public class Servlet extends HttpServlet {
         VisitorService visitorService = new VisitorService();
         visitorService.insertVisitor(visitorFromForm);
 
-        List <Visitor> allVisitors= visitorService.getAllVisitors();
-        for (Visitor v: allVisitors){
-            v.print(pw);
-        }
+        List <Visitor> allVisitors = visitorService.getAllVisitors();
 
+        req.setAttribute("allVisitors", allVisitors);
+        getServletContext().getRequestDispatcher("/insertAddress.jsp").forward(req, resp);
     }
 }

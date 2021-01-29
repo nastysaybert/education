@@ -3,6 +3,8 @@ package models;
 import javax.persistence.*;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -20,6 +22,8 @@ public class Visitor {
     public String lastname;
     @Column (name = "DateOfBirth")
     public LocalDate dateOfBirth;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "visitor")
+    public List<Address> addresses;
 
     public Visitor(){
     }
@@ -52,6 +56,10 @@ public class Visitor {
         return this.dateOfBirth;
     }
 
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
     public void setVisitorId(int visitorId) {
         this.visitorId = visitorId;
     }
@@ -72,12 +80,25 @@ public class Visitor {
         this.dateOfBirth = dayOfBirth;
     }
 
+    public void setAddresses (List<Address> addresses) { this.addresses = new ArrayList<Address>(addresses); }
+
     public void print (PrintWriter pw) {
         pw.println("VisitorID: " + this.getVisitorId() + "<br>");
         pw.println("Surname: " + this.getSurname() + "<br>");
         pw.println("Name: " + this.getName() + "<br>");
         pw.println("Lastname: " + this.getLastname() + "<br>");
         pw.println("DateOfBirth: " + this.getDateOfBirth() + "<br>");
+        if (this.getAddresses().size()>0){
+            pw.println("<br>");
+            pw.println("Адреса пользователя: " + "<br>");
+            for (Address a : this.getAddresses()){
+                pw.println("Street: " + a.getStreet() + "<br>");
+                pw.println("House: " + a.getHouse() + "<br>");
+                pw.println("Flat: " + a.getFlat() + "<br>");
+                pw.println("<br>");
+            }
+            pw.println("<br>");
+        } else pw.println("<br>");
         pw.println("<br>");
     }
 }
