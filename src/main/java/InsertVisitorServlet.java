@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@WebServlet("/servlet")
-public class Servlet extends HttpServlet {
+@WebServlet("/insertVisitor")
+public class InsertVisitorServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
@@ -29,7 +29,7 @@ public class Servlet extends HttpServlet {
         String dateInString = req.getParameter("dateOfBirth");
         visitorFromForm.setDateOfBirth(LocalDate.parse(dateInString));
 
-        VisitorService visitorService = new VisitorService();
+        VisitorService visitorService = VisitorService.getInstance();
         visitorService.insertVisitor(visitorFromForm);
 
         List <Visitor> allVisitors = visitorService.getAllVisitors();

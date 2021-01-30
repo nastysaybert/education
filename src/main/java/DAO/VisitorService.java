@@ -6,6 +6,24 @@ import models.Visitor;
 import java.util.List;
 
 public class VisitorService {
+
+    private static VisitorService instance;
+
+    private VisitorService(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static VisitorService getInstance(){
+        if (instance == null) {
+            instance = new VisitorService();
+        }
+        return instance;
+    }
+
     private VisitorDAOImpl visitorDAO = new VisitorDAOImpl();
     private AddressDAOImpl addressDAO = new AddressDAOImpl();
 

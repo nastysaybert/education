@@ -1,10 +1,10 @@
 models\Visitor.class
 DAO\VisitorDAOImpl.class
 InsertAddressServlet.class
+InsertVisitorServlet.class
 DAO\AddressDAO.class
 DAO\VisitorDAO.class
 DAO\VisitorService.class
 utils\HibernateSessionFactoryUtil.class
 DAO\AddressDAOImpl.class
 models\Address.class
-Servlet.class

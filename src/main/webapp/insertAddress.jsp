@@ -4,7 +4,7 @@
 <html>
 <body>
 <h2>Приятно познакомиться!</h2>
-<form action="insertAddressServlet" method="POST">
+<form action="insertAddress" method="POST">
     <fieldset>
         <table>
             <legend><h3>Теперь введем адрес:</h3></legend>
@@ -34,7 +34,7 @@
         </table>
     </fieldset>
     <br>
-    <button formaction="insertAddressServlet" type="submit">Запомнить</button>
+    <button formaction="insertAddress" type="submit">Запомнить</button>
 </form>
 
 </body>

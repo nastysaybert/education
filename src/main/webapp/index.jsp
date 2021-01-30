@@ -1,10 +1,10 @@
-<!--%@page import="Servlet"% -->
+<!--%@page import="InsertVisitorServlet"% -->
 <%@page contentType="text/html; charset=UTF-8" language="java" %>
 
 <html>
 <body>
 <h2>Давайте знакомиться!</h2>
-<form action="servlet" method="POST">
+<form action="insertVisitor" method="POST">
     <fieldset>
         <table>
             <legend><h3>Введите данные о себе:</h3></legend>
@@ -27,7 +27,7 @@
         </table>
     </fieldset>
     <br>
-    <button formaction="servlet" type="submit">Запомнить</button>
+    <button formaction="insertVisitor" type="submit">Запомнить</button>
 </form>
 
 </body>
