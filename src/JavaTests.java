@@ -5,6 +5,8 @@ import java.util.*;
 public class JavaTests {
     public static void main(String[] args) {
 
+        // значения не обязаны быть уникальными
+        //ключи - уникальны
         Map<Integer, String> hashMap = new HashMap<>();                     //не гарантирует порядок значений
         Map<Integer,String>  linkedHashMap = new LinkedHashMap<>();         //гарантируется порядок по добавлению
         Map<Integer,String> treeMap = new TreeMap<>();                      //сотритует по значению ключа
