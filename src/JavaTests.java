@@ -1,80 +1,52 @@
 import org.w3c.dom.ls.LSOutput;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class JavaTests {
     public static void main(String[] args) {
-        List<Person> people = new ArrayList<>();
-        Set<Person> peopleSet = new TreeSet<>();
+        Person person1 = new Person(1);
+        Person person2 = new Person(2);
+        Person person3 = new Person(3);
+        Person person4 = new Person(4);
 
-        addElements(people);
-        /*
-        При попытке добавить в TreeSet два элемента, которые, согласно
-        нашему компоратору, равны (здесь - длина имени одинакова),
-        добавится только один элемент, тот, который добавляли раньше
-         */
-        addElements(peopleSet);
+        //Queue <Person> people = new LinkedList<>();
 
-        Collections.sort(people);
-        System.out.println(people);
-        System.out.println(peopleSet);
-    }
+        Queue <Person> people = new ArrayBlockingQueue<Person>(3);
 
-    private static void addElements(Collection collection){
-        collection.add(new Person(4, "Mike"));
-        collection.add(new Person(2, "Bo"));
-        collection.add(new Person(3, "Kathy"));
-        collection.add(new Person(1, "Thomas"));
+
+        //add выдаст ошибку, offer вернет спец.значение (false)
+        System.out.println(people.offer(person3));
+        System.out.println(people.offer(person2));
+        System.out.println(people.offer(person4));
+        System.out.println(people.offer(person1));
+
+//        people.add(person3);
+//        people.add(person2);
+//        people.add(person4);
+//        people.add(person1);
+//
+//        System.out.println(people.remove());        //посмотрели и удалили
+//        System.out.println(people.peek());          //только посмотрели
+//        System.out.println(people);
     }
 }
 
-class Person implements Comparable<Person>{
+class Person{
     private int id;
-    private String name;
 
-    public Person(int id, String name) {
+    public Person(int id) {
         this.id = id;
-        this.name = name;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return id == person.id &&
-                Objects.equals(name, person.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
     @Override
     public String toString() {
-        return "{" +
+        return "Person{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 '}';
-    }
-
-    @Override
-    public int compareTo(Person o) {
-        if (this.name.length() > o.getName().length()){
-            return 1;
-        }else if (this.name.length() < o.getName().length()){
-            return -1;
-        } else {
-            return 0;
-        }
     }
 }
