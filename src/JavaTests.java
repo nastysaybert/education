@@ -4,42 +4,55 @@ import java.util.*;
 
 public class JavaTests {
     public static void main(String[] args) {
+        Map<Person,String> map = new HashMap<>();
+        Set<Person> set = new HashSet<>();
 
-        //хранит одиночные (как List), но уникальные элементы
-        Set<Integer> set1 = new HashSet<>();
-        Set<Integer> set2 = new HashSet<>();
+        Person person1 = new Person(1,"Mike");
+        Person person2 = new Person(1,"Mike");
 
-        set1.add(0);
-        set1.add(1);
-        set1.add(2);
-        set1.add(3);
-        set1.add(4);
-        set1.add(5);
+        map.put(person1, "123");
+        map.put(person2, "123");
 
-        set2.add(2);
-        set2.add(3);
-        set2.add(4);
-        set2.add(5);
-        set2.add(6);
-        set2.add(7);
-        set2.add(8);
+        set.add(person1);
+        set.add(person2);
 
-        System.out.println(set1);
-        System.out.println(set2);
+        System.out.println(map);
+        System.out.println(set);
 
-        //объединение
-        Set<Integer> union = new HashSet<>(set1);
-        union.addAll(set2);
-        System.out.println(union);
-
-        //пересечение
-        Set<Integer> intersection = new HashSet<>(set1);
-        intersection.retainAll(set2);
-        System.out.println(intersection);
-
-        //разность множеств
-        Set<Integer> difference = new HashSet<>(set1);
-        difference.removeAll(set2);
-        System.out.println(difference);
     }
+}
+
+class Person {
+    private int id;
+    private String name;
+
+    public Person(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String toString(){
+        return "Person{" + id + ", name =" + name + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id &&
+                name.equals(person.name);
+    }
+    // преобразование объекта произвольной длины в строку/число фиксированной длины
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+    /* Контракт Hashcode-equals:
+    Сравнили 2 объекта через хэш:
+    1. хэши разные = объекты точно разные (быстрая операция)
+    2. хеши совпадают ->
+        либо однаковые, либо только их хэши (коллизия хеширования):
+        2.1. вызываем equals (медленная операция) -> получаем однозначный результат
+     */
 }
