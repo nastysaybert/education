@@ -4,52 +4,42 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class JavaTests {
-    public static void main(String[] args) throws InterruptedException {
-        //потоки не синхронизированы, борятся за процессорное время
-//        MyThread myThread = new MyThread();
-//        myThread.start();
-//
-//        Thread.sleep(1000);
-//        MyThread myThread2 = new MyThread();
-//        myThread2.start();
+    public static void main(String[] args) {
+        MyThread myThread = new MyThread();
+        myThread.start();
 
-//        System.out.println("I'm going to sleep");
-//        Thread.sleep(3000);
-//        System.out.println("I am awake");
+        //хотим по нажатию на enter в консоли завершать поток
 
-        Thread thread = new Thread(new Runner());
-        thread.start();
-        System.out.println("Hello from main thread");
 
-    }
-}
+        Scanner scanner= new Scanner(System.in);
+        scanner.nextLine();
 
-//лучше делать так
-class Runner implements Runnable{
-
-    @Override
-    public void run() {
-        for (int i = 0; i<10; i++){
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Hello from MyThread " + i);
-        }
+        myThread.shutdown();
     }
 }
 
 class MyThread extends Thread{
-    public void run(){
-        //Здесь будет выполняться код, исполняемый в текущем потоке
-        for (int i = 0; i<10; i++){
+
+    //помечаем переменную ключевым словом volatile, чтобы она не кешировалась
+    // каждым исполняющим потоком компьютера отдельно,
+    //чтобы не возникало проблемы когерентности кэшей
+
+    //использовать всегда для данных, которые могут делить между собой несколько потоков
+    private volatile boolean running = true;
+
+    @Override
+    public void run() {
+        while (running){
+            System.out.println("Hello!");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Hello from MyThread " + i);
         }
+    }
+
+    public void shutdown(){
+        this.running = false;
     }
 }
