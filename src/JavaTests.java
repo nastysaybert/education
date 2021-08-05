@@ -4,42 +4,50 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class JavaTests {
-    public static void main(String[] args) {
-        MyThread myThread = new MyThread();
-        myThread.start();
+    private int counter;
 
-        //хотим по нажатию на enter в консоли завершать поток
-
-
-        Scanner scanner= new Scanner(System.in);
-        scanner.nextLine();
-
-        myThread.shutdown();
+    public static void main(String[] args) throws InterruptedException {
+        JavaTests javaTests = new JavaTests();
+        javaTests.doWork();
     }
-}
 
-class MyThread extends Thread{
-
-    //помечаем переменную ключевым словом volatile, чтобы она не кешировалась
-    // каждым исполняющим потоком компьютера отдельно,
-    //чтобы не возникало проблемы когерентности кэшей
-
-    //использовать всегда для данных, которые могут делить между собой несколько потоков
-    private volatile boolean running = true;
-
-    @Override
-    public void run() {
-        while (running){
-            System.out.println("Hello!");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void doWork() throws InterruptedException {
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i<1000; i++){
+                    increment();
+                }
             }
-        }
+        });
+
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i<1000; i++){
+                    increment();
+                }
+            }
+        });
+
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+
+        System.out.println(counter);
     }
 
-    public void shutdown(){
-        this.running = false;
+
+    //синхронизированными могут быть только методы
+    //такая пометка говорит о том, что тело метода может быть
+    //исполнено только одним потоком в единый момент времени
+    public void increment(){
+        //synchronized block
+        synchronized (this){
+            counter++;
+        }
+
     }
 }
+
