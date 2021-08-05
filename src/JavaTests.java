@@ -1,18 +1,17 @@
-import org.w3c.dom.ls.LSOutput;
+import com.sun.source.tree.WhileLoopTree;
 
-import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class JavaTests {
+
     public static void main(String[] args) throws InterruptedException {
-        WaitAndNotify wn = new WaitAndNotify();
+        ProducerConsumer pc = new ProducerConsumer();
 
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    wn.produce();
+                    pc.produce();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -22,7 +21,7 @@ public class JavaTests {
             @Override
             public void run() {
                 try {
-                    wn.consume();
+                    pc.consume();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -37,26 +36,35 @@ public class JavaTests {
     }
 }
 
-class WaitAndNotify{
+class ProducerConsumer {
+    private Queue<Integer> queue = new LinkedList<>();
+    private final int LIMIT = 10;
+    private final Object lock = new Object();
+
     public void produce() throws InterruptedException {
-        synchronized (this){
-            System.out.println("Producer thread started...");
-            //вызывается на контексте (в данном случае на объекте this)
-            //на этом же объекте должен быть вызван потом notify
-            //либо надо указать конкретно, на каком объекте вызывать
-            wait();     //1. отдаем intrinsic lock, 2. ждем вызова notify
-            System.out.println("Producer thread resumed...");
+        int value = 0;
+        while (true){
+            synchronized (lock){
+                while (queue.size() == LIMIT){
+                    lock.wait();
+                }
+                queue.offer(value++);
+                lock.notify();
+            }
         }
     }
     public void consume() throws InterruptedException {
-        Thread.sleep(2000);
-        Scanner scanner = new Scanner(System.in);
-        synchronized (this){
-            System.out.println("Waiting for return key pressed");
-            scanner.nextLine();
-            notify();       //разбудить один поток  //не освободит intrinsic lock пока не закончится блок кода
-//          notifyAll();    //разбудить все потоки
-            Thread.sleep(5000);
+        while (true){
+            synchronized (lock){
+                while (queue.size()==0){
+                    lock.wait();
+                }
+                int value = queue.poll();
+                System.out.println(value);
+                System.out.println("Queue size is " + queue.size());
+                lock.notify();
+            }
+            Thread.sleep(1000);
         }
     }
 }
