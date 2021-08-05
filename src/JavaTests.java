@@ -1,29 +1,28 @@
 import org.w3c.dom.ls.LSOutput;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 public class JavaTests {
-    //потокобезоасная очередь с ограниченным сислом элементов
-    private static BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
-
     public static void main(String[] args) throws InterruptedException {
+        WaitAndNotify wn = new WaitAndNotify();
+
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    produce();
+                    wn.produce();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
-
         Thread thread2 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    consumer();
+                    wn.consume();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -32,28 +31,32 @@ public class JavaTests {
 
         thread1.start();
         thread2.start();
+
         thread1.join();
         thread2.join();
-
     }
+}
 
-    private static void produce() throws InterruptedException {
-        Random random = new Random();
-        while (true){
-            queue.put(random.nextInt(100));
+class WaitAndNotify{
+    public void produce() throws InterruptedException {
+        synchronized (this){
+            System.out.println("Producer thread started...");
+            //вызывается на контексте (в данном случае на объекте this)
+            //на этом же объекте должен быть вызван потом notify
+            //либо надо указать конкретно, на каком объекте вызывать
+            wait();     //1. отдаем intrinsic lock, 2. ждем вызова notify
+            System.out.println("Producer thread resumed...");
         }
     }
-
-    private static void consumer() throws InterruptedException {
-        Random random = new Random();
-        while (true) {
-            Thread.sleep(100);
-            if(random.nextInt(10)==5){
-                //метод take ждет, пока элементы будут добавлены
-                System.out.println(queue.take());
-                System.out.println("Queue size is " + queue.size());
-            }
+    public void consume() throws InterruptedException {
+        Thread.sleep(2000);
+        Scanner scanner = new Scanner(System.in);
+        synchronized (this){
+            System.out.println("Waiting for return key pressed");
+            scanner.nextLine();
+            notify();       //разбудить один поток  //не освободит intrinsic lock пока не закончится блок кода
+//          notifyAll();    //разбудить все потоки
+            Thread.sleep(5000);
         }
     }
-
 }
