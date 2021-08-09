@@ -1,28 +1,58 @@
-import org.w3c.dom.ls.LSOutput;
-
-import javax.crypto.spec.PSource;
-import java.util.Locale;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.*;
 
 public class JavaTests {
-    public static void main(String[] args) {
-        Semaphore semaphore = new Semaphore(3);
-        try {
-            semaphore.acquire();        //занимает одно из permits (разрешений),
-            semaphore.acquire();        //если нет свободных, будет ждать освобождения
-            semaphore.acquire();
-            System.out.println("All permits have been acquired");
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        Connection connection = Connection.getConnection();
 
-            semaphore.acquire();
+        for (int i = 0; i<10; i++){
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        connection.work();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-            System.out.println("Cant reach here...");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-        semaphore.release();            //отпускает одно из permits
-        semaphore.availablePermits();   //кол-во доступных permits
-        System.out.println(semaphore.availablePermits());
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.DAYS);
+    }
+}
+
+class Connection {
+    private static Connection connection = new Connection();
+    private int connectionsCount;
+    private Semaphore semaphore = new Semaphore(10);
+
+    private Connection(){
+
+    }
+
+    public static Connection getConnection(){
+        return connection;
+    }
+
+    public void work() throws InterruptedException {
+        semaphore.acquire();
+        try{
+            doWork();
+        } finally {
+            semaphore.release();
+        }
+    }
+
+    public void doWork() throws InterruptedException {
+        synchronized (this){
+            connectionsCount++;
+            System.out.println(connectionsCount);
+        }
+        Thread.sleep(5000);
+        synchronized (this){
+            connectionsCount--;
+        }
     }
 }
