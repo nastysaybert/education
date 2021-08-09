@@ -1,53 +1,28 @@
+import org.w3c.dom.ls.LSOutput;
+
+import javax.crypto.spec.PSource;
 import java.util.Locale;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class JavaTests {
-    public static void main(String[] args) throws InterruptedException {
-        Task task = new Task();
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                task.firstThread();
-            }
-        });
+    public static void main(String[] args) {
+        Semaphore semaphore = new Semaphore(3);
+        try {
+            semaphore.acquire();        //занимает одно из permits (разрешений),
+            semaphore.acquire();        //если нет свободных, будет ждать освобождения
+            semaphore.acquire();
+            System.out.println("All permits have been acquired");
 
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                task.secondThread();
-            }
-        });
+            semaphore.acquire();
 
-        thread1.start();
-        thread2.start();
-        thread1.join();
-        thread2.join();
-
-        task.showCounter();
+            System.out.println("Cant reach here...");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        semaphore.release();            //отпускает одно из permits
+        semaphore.availablePermits();   //кол-во доступных permits
+        System.out.println(semaphore.availablePermits());
     }
 }
- class Task{
-    private int counter;
-    private Lock lock = new ReentrantLock();
-
-    private void increment(){
-        for (int i = 0; i< 10000; i++)
-            counter++;
-    }
-
-    public void firstThread(){
-        lock.lock();
-        increment();
-        lock.unlock();
-    }
-    public void secondThread(){
-        lock.lock();
-        increment();
-        lock.unlock();
-    }
-
-     public void showCounter(){
-         System.out.println(counter);
-     }
- }
