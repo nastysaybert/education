@@ -1,4 +1,6 @@
 import javax.crypto.spec.PSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JavaTests {
     public static void main(String[] args)  {
@@ -17,24 +19,11 @@ public class JavaTests {
         {2, }    - от 2х символов до..
         {2, 7}   - от 2 до 7 символов до..
          */
+        String a = "Hello there hey";
+        //String[] words = a.split("[1-9]+");
 
-        String a = "-1234";
-        String b = "1235";
-        String c = "+12345672";
-        String regex = "[a-zA-Z31]*(-|\\+)?\\d*";
-        System.out.println(a.matches(regex));
-        System.out.println(b.matches(regex));
-        System.out.println(c.matches(regex));
-
-        String d = "afg3311ihjk145678";
-        System.out.println(d.matches(regex));
-        String e = "hello";
-        System.out.println(e.matches("[^abc]*"));
-
-        String url = "http://www.google.com";
-        String url2 = "http://www.yandex.ru";
-        System.out.println(url.matches("http://www\\..+\\.(com|ru|biz|de)"));
-
-        System.out.println(b.matches("\\d{2,}"));
+        a = a.replaceAll(" ", ".");
+        String[] words = a.split("\\.");
+        System.out.println(Arrays.toString(words));
     }
 }
